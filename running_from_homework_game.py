@@ -15,7 +15,7 @@ HEIGHT = 1104
 
 s = 250
 a = s
-spood = 15
+spood = 30
 spood_mouse = 25
 backround_color = (0,0,1)
 
