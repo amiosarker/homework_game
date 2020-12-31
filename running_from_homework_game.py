@@ -2,6 +2,11 @@ from cmath import rect
 
 import pygame
 import sys
+import math
+
+def dis(x1, y1, x2, y2,):
+    d = math.sqrt(((x2 - x1)**2) + ((y2 - y1)**2))
+    return d
 
 pygame.init()
 
@@ -10,9 +15,9 @@ HEIGHT = 1104
 
 s = 250
 a = s
-spood = 30
+spood = 15
 spood_mouse = 25
-backround_color = ((0,0,1))
+backround_color = (0,0,1)
 
 enemy_size = 52
 enemy_pos = [100, 0]
@@ -21,6 +26,7 @@ enemy_pos2 = [100, 50]
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+font = pygame.font.Font(pygame.font.get_default_font(), 36)
 good_guy_image = pygame.image.load('amio.png')
 good_guy_image = pygame.transform.scale(good_guy_image, (s,s))
 #good_guy_image = pygame.transform.flip(good_guy_image, True, True)
@@ -36,6 +42,9 @@ y = HEIGHT//2 - a//2
 direction_moving = ''
 
 mouse_tracking = False
+
+score = 0
+max_score = 0
 
 while not game_over:
     for event in pygame.event.get():
@@ -100,12 +109,32 @@ while not game_over:
     if enemy_pos[1] > y:
         enemy_pos[1] -= enemy_spood
 
+    d = dis(x-s/2, y-s/2, enemy_pos[0]-s/2, enemy_pos[1]-s/2)
+    thrhld = math.sqrt((s**2)/2)
+
+    if d < thrhld:
+        score = 0
+    else:
+        score +=1
+
+    if score > max_score:
+        max_score = score
+
     screen.fill(backround_color)
     screen.blit(good_guy_image, (x-s/2, y-s/2))
     screen.blit(enemy, (enemy_pos[0]-s/2, enemy_pos[1]-a/2))
     #enemy = pygame.draw.rect(screen, (0, 0, 255), (enemy_pos[0], enemy_pos[1], enemy_size, enemy_size))
 
     #pygame.draw.rect(screen, (255, 0, 0), (enemy_pos2[0], enemy_pos2[1], enemy_size, enemy_size))
+
+    score_text = "Score:" + str(score)
+    high_score_text = "High score:" + str(max_score)
+
+    txt_srfce = font.render(score_text, True, (255,255,255))
+    screen.blit(txt_srfce, (WIDTH-400, 20))
+
+    txt_srfce = font.render(high_score_text, True, (255,255,255))
+    screen.blit(txt_srfce, (WIDTH-400, 70))
 
     clock.tick(12)
     pygame.display.flip()
