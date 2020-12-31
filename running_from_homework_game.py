@@ -7,9 +7,11 @@ pygame.init()
 
 WIDTH = 1914
 HEIGHT = 1104
+
 s = 250
 a = s
 spood = 30
+spood_mouse = 25
 backround_color = ((0,0,1))
 
 enemy_size = 52
@@ -33,6 +35,7 @@ y = HEIGHT//2 - a//2
 
 direction_moving = ''
 
+mouse_tracking = False
 
 while not game_over:
     for event in pygame.event.get():
@@ -53,6 +56,22 @@ while not game_over:
                 direction_moving = 'right'
         elif event.type == pygame.KEYUP:
             direction_moving = ''
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_tracking = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            mouse_tracking = False
+
+    if mouse_tracking:
+            mx, my = pygame.mouse.get_pos()
+            #print(event)
+            if x < mx:
+                x += spood_mouse
+            if x > mx:
+                x -= spood_mouse
+            if y < my:
+                y += spood_mouse
+            if y > my:
+                y -= spood_mouse
 
     if direction_moving == 'up':
         y -= spood
@@ -82,12 +101,11 @@ while not game_over:
         enemy_pos[1] -= enemy_spood
 
     screen.fill(backround_color)
-    screen.blit(good_guy_image, (x, y))
-    screen.blit(enemy, (enemy_pos))
-   #enemy = pygame.draw.rect(screen, (0, 0, 255), (enemy_pos[0], enemy_pos[1], enemy_size, enemy_size))
+    screen.blit(good_guy_image, (x-s/2, y-s/2))
+    screen.blit(enemy, (enemy_pos[0]-s/2, enemy_pos[1]-a/2))
+    #enemy = pygame.draw.rect(screen, (0, 0, 255), (enemy_pos[0], enemy_pos[1], enemy_size, enemy_size))
 
     #pygame.draw.rect(screen, (255, 0, 0), (enemy_pos2[0], enemy_pos2[1], enemy_size, enemy_size))
-
 
     clock.tick(12)
     pygame.display.flip()
